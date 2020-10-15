@@ -2,7 +2,7 @@
   "name": "interactive_markov_chain",
   "version": "1.0.1",
   "description": "It’s a website that lets you design small Discrete-Time Markov Chains and interact with it",
-  "main": "index.js",
+  "homepage": "https://samuraiexx.github.io/interactive_markov_chain",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -41,7 +41,6 @@
   "bugs": {
     "url": "https://github.com/samuraiexx/interactive_markov_chain/issues"
   },
-  "homepage": "https://samuraiexx.github.io/interactive_markov_chain",
   "browserslist": {
     "production": [
       ">0.2%",
