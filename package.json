@@ -1,25 +1,27 @@
 {
   "name": "interactive_markov_chain",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "It’s a website that lets you design small Discrete-Time Markov Chains and interact with it",
   "main": "index.js",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "gh-pages": "^3.1.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-scripts": "3.4.3",
     "save-dev": "^0.0.1-security"
   },
+  "devDependencies": {
+    "gh-pages": "^3.1.0"
+  },
   "scripts": {
     "start": "react-scripts start",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -34,6 +36,12 @@
     "simulation",
     "interactive"
   ],
+  "author": "Mateus de Castro e Joao Xavier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/samuraiexx/interactive_markov_chain/issues"
+  },
+  "homepage": "https://samuraiexx.github.io/interactive_markov_chain",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -45,11 +53,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "author": "Mateus de Castro e Joao Xavier",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/samuraiexx/interactive_markov_chain/issues"
-  },
-  "homepage": "https://github.com/samuraiexx/interactive_markov_chain"
+  }
 }
