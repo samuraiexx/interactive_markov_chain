@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/samuraiexx/interactive_markov_chain/static/css/main.5f361e03.chunk.css",
-    "main.js": "/samuraiexx/interactive_markov_chain/static/js/main.c225602d.chunk.js",
-    "main.js.map": "/samuraiexx/interactive_markov_chain/static/js/main.c225602d.chunk.js.map",
-    "runtime-main.js": "/samuraiexx/interactive_markov_chain/static/js/runtime-main.0651b54d.js",
-    "runtime-main.js.map": "/samuraiexx/interactive_markov_chain/static/js/runtime-main.0651b54d.js.map",
-    "static/js/2.c016f9cf.chunk.js": "/samuraiexx/interactive_markov_chain/static/js/2.c016f9cf.chunk.js",
-    "static/js/2.c016f9cf.chunk.js.map": "/samuraiexx/interactive_markov_chain/static/js/2.c016f9cf.chunk.js.map",
-    "index.html": "/samuraiexx/interactive_markov_chain/index.html",
-    "precache-manifest.d3dc4390c96bf357fec630d24c009a08.js": "/samuraiexx/interactive_markov_chain/precache-manifest.d3dc4390c96bf357fec630d24c009a08.js",
-    "service-worker.js": "/samuraiexx/interactive_markov_chain/service-worker.js",
-    "static/css/main.5f361e03.chunk.css.map": "/samuraiexx/interactive_markov_chain/static/css/main.5f361e03.chunk.css.map",
-    "static/js/2.c016f9cf.chunk.js.LICENSE.txt": "/samuraiexx/interactive_markov_chain/static/js/2.c016f9cf.chunk.js.LICENSE.txt",
-    "static/media/logo.svg": "/samuraiexx/interactive_markov_chain/static/media/logo.5d5d9eef.svg"
+    "main.css": "/interactive_markov_chain/static/css/main.5f361e03.chunk.css",
+    "main.js": "/interactive_markov_chain/static/js/main.a5539fbe.chunk.js",
+    "main.js.map": "/interactive_markov_chain/static/js/main.a5539fbe.chunk.js.map",
+    "runtime-main.js": "/interactive_markov_chain/static/js/runtime-main.f5e518f3.js",
+    "runtime-main.js.map": "/interactive_markov_chain/static/js/runtime-main.f5e518f3.js.map",
+    "static/js/2.c016f9cf.chunk.js": "/interactive_markov_chain/static/js/2.c016f9cf.chunk.js",
+    "static/js/2.c016f9cf.chunk.js.map": "/interactive_markov_chain/static/js/2.c016f9cf.chunk.js.map",
+    "index.html": "/interactive_markov_chain/index.html",
+    "precache-manifest.242a29e655eeb3b03abdb07d6567915c.js": "/interactive_markov_chain/precache-manifest.242a29e655eeb3b03abdb07d6567915c.js",
+    "service-worker.js": "/interactive_markov_chain/service-worker.js",
+    "static/css/main.5f361e03.chunk.css.map": "/interactive_markov_chain/static/css/main.5f361e03.chunk.css.map",
+    "static/js/2.c016f9cf.chunk.js.LICENSE.txt": "/interactive_markov_chain/static/js/2.c016f9cf.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/interactive_markov_chain/static/media/logo.5d5d9eef.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.0651b54d.js",
+    "static/js/runtime-main.f5e518f3.js",
     "static/js/2.c016f9cf.chunk.js",
     "static/css/main.5f361e03.chunk.css",
-    "static/js/main.c225602d.chunk.js"
+    "static/js/main.a5539fbe.chunk.js"
   ]
 }
