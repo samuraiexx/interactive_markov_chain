@@ -1,6 +1,6 @@
 {
   "name": "interactive_markov_chain",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "It’s a website that lets you design small Discrete-Time Markov Chains and interact with it",
   "homepage": "https://samuraiexx.github.io/interactive_markov_chain",
   "dependencies": {
