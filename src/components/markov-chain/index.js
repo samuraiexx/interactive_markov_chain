@@ -34,7 +34,7 @@ function MarkovChain(props) {
   // graph payload (with minimalist structure)
   // https://danielcaldas.github.io/react-d3-graph/docs/
   const data = {
-    nodes: [{ id: 0 }, { id: 1 }, { id: 2, labelPositon: "center" }],
+    nodes: [{ id: 0 }, { id: 1 }, { id: 2 }],
     links: [
       { source: 0, target: 1, strokeWidth: 5 },
       { source: 1, target: 0 },
@@ -47,17 +47,21 @@ function MarkovChain(props) {
   const myConfig = {
     nodeHighlightBehavior: true,
     directed: true,
+    highlightDegree: 0,
+    d3: {
+      linkLength: 200,
+    },
     node: {
       color: "rgb(81,81,81)",
       size: 2000,
-      highlightStrokeColor: "blue",
+      highlightStrokeColor: "white",
       labelPosition: "center",
       fontSize: 20,
       highlightFontSize: 20,
       fontColor: "white",
     },
     link: {
-      highlightColor: "lightblue",
+      highlightColor: "white",
       type: "CURVE_SMOOTH"
     },
   };
