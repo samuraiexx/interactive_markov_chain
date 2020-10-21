@@ -31,14 +31,14 @@ export function useMarkovChain() {
     const randVal = Math.random();
     let prefSum = 0;
     let idx = 0;
-    for (const prob in currentNode.transitionProbabilities) {
+    nodes[currentNode].transitionProbabilities.forEach((prob) => {
       prefSum += prob;
       if (prefSum > randVal + eps) {
-        currentNode = nodes[idx];
-        return currentNode;
+        setCurrentNode(idx);
+        return idx;
       }
       idx++;
-    }
+    });
     return currentNode;
   }
 
@@ -69,17 +69,19 @@ export function useMarkovChain() {
       removeNode();
     }
 
-    for (let i = 0; i < 5; i++) {
-      addNode();
-    }
+    let newNodes = [new Node(0), new Node(1), new Node(2), new Node(3), new Node(4)];
 
-    for (let i = 0; i < 4; i++) {
-      nodes[i].transitionProbabilities[i+1] = 0.5
-    }
+    newNodes.map((node) => {
+      let probs = Array(newNodes.length).fill(0);
+      const next = (parseInt(node.label) + 1) % newNodes.length;
+      const prev = (parseInt(node.label) - 1 + newNodes.length) % newNodes.length;
 
-    for (let i = 1; i < 5; i++) {
-      nodes[i].transitionProbabilities[i-1] = 0.5
-    }
+      probs[next] = 0.5;
+      probs[prev] = 0.5;
+      node.transitionProbabilities = probs;
+    });
+
+    setNodes(newNodes);
   }
 
   return {
@@ -89,6 +91,7 @@ export function useMarkovChain() {
     addNode,
     removeNode,
     iterate, 
+    test, 
     tryUpdateNodeProbabilities,
   };
 }

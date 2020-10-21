@@ -16,6 +16,8 @@ function MarkovChain(props) {
     tryUpdateNodeProbabilities,
     addNode,
     removeNode,
+    iterate,
+    test,
     /*
       currentNode,
       setCurrentNode,
@@ -68,6 +70,8 @@ function MarkovChain(props) {
       <ButtonGroup aria-label="outlined primary button group">
         <Button onClick={addNode}>Add Node</Button>
         <Button onClick={removeNode}>Remove Node</Button>
+        <Button onClick={test}>Generate Test Graph</Button>
+        <Button onClick={iterate}>Step</Button>
       </ButtonGroup>
       <Drawer anchor="left" open={open} onClose={toggleDrawer}>
         <NodeEditor {...nodeEditorProps} />

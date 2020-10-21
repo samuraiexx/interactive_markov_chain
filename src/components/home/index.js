@@ -33,7 +33,7 @@ function Home() {
     <div>
       <h1>Interactive Markov Chains</h1>
       <h2>State Statistics</h2>
-  <p>Steps: {markovChainState.numberOfSteps}</p>
+  <p>Steps: </p>
       <Button>asdf</Button>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
