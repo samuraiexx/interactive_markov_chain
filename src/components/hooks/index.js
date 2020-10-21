@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const epsolon = 1e-6;
+const eps = 1e-6;
 
 export function useMarkovChain() {
   const [nodes, setNodes] = useState([]);
@@ -27,6 +27,21 @@ export function useMarkovChain() {
     setNodes(newNodes);
   }
 
+  const iterate = () => {
+    const randVal = Math.random();
+    let prefSum = 0;
+    let idx = 0;
+    for (const prob in currentNode.transitionProbabilities) {
+      prefSum += prob;
+      if (prefSum > randVal + eps) {
+        currentNode = nodes[idx];
+        return currentNode;
+      }
+      idx++;
+    }
+    return currentNode;
+  }
+
   const tryUpdateNodeProbabilities = (label, newProbabilities, force = false) => {
     const newNodes = [...nodes];
 
@@ -41,12 +56,30 @@ export function useMarkovChain() {
     newNode.transitionProbabilities = newProbabilities;
     newNodes[label] = newNode;
 
-    if (sum + epsolon < 1 || sum - epsolon > 1) {
+    if (sum + eps < 1 || sum - eps > 1) {
       return false;
     }
 
     setNodes(newNodes);
     return true;
+  }
+
+  const test = () => {
+    while (nodes.length > 0) {
+      removeNode();
+    }
+
+    for (let i = 0; i < 5; i++) {
+      addNode();
+    }
+
+    for (let i = 0; i < 4; i++) {
+      nodes[i].transitionProbabilities[i+1] = 0.5
+    }
+
+    for (let i = 1; i < 5; i++) {
+      nodes[i].transitionProbabilities[i-1] = 0.5
+    }
   }
 
   return {
@@ -55,6 +88,7 @@ export function useMarkovChain() {
     setCurrentNode,
     addNode,
     removeNode,
+    iterate, 
     tryUpdateNodeProbabilities,
   };
 }
