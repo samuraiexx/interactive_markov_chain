@@ -5,14 +5,26 @@ const epsolon = 1e-6;
 export function useMarkovChain() {
   const [nodes, setNodes] = useState([]);
   const [currentNode, setCurrentNode] = useState(0);
-  const [selectedNode, setSelectedNode] = useState(null);
 
   const addNode = () => {
-    setNodes([...nodes, new Node(nodes.length)])
+    const addedNodeLabel = nodes.length;
+    const newNodes = [...nodes]
+      .map(node => ({ ...node, transitionProbabilities: { ...node.transitionProbabilities, addedNodeLabel: 0 } }));
+
+    newNodes.push(new Node(addedNodeLabel));
+    setNodes(newNodes);
   }
 
   const removeNode = () => {
-    setNodes(nodes.slice(0, -1));
+    const removedNodeLabel = nodes.length - 1;
+    const newNodes = nodes
+      .slice(0, -1)
+      .map(node => {
+        delete node.transitionProbabilities[removedNodeLabel];
+        return node;
+      });
+
+    setNodes(newNodes);
   }
 
   const tryUpdateNodeProbabilities = (label, newProbabilities, force = false) => {
@@ -44,17 +56,13 @@ export function useMarkovChain() {
     addNode,
     removeNode,
     tryUpdateNodeProbabilities,
-    selectedNode,
-    setSelectedNode
   };
 }
 
 class Node {
   constructor(label) {
-    this.isSelected = false;
-    this.label = label;
-    this.transitionProbabilities = [];
-
+    this.label = label.toString();
+    this.transitionProbabilities = new Array(label + 1).fill(0);
     this.transitionProbabilities[label] = 1;
   }
 }

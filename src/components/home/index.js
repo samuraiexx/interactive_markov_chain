@@ -22,9 +22,7 @@ function Home() {
   const {
     nodes,
     currentNode,
-    selectedNode,
     setCurrentNode,
-    setSelectedNode,
     addNode,
     removeNode,
     tryUpdateNodeProbabilities
