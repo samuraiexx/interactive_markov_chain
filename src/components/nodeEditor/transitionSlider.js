@@ -1,62 +1,47 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Grid,
-  Typography,
   Slider,
-  Input,
-  makeStyles
+  TextField,
 } from '@material-ui/core';
 
-const useStyles = makeStyles({
-  input: {
-    width: 42,
-  },
-});
-
-const handleSliderChange = (event, newValue) => {
-};
-
-const handleInputChange = (event) => {
-};
-
-
-function TransitionSlider({ label, probability, setProbability }) {
-  const classes = useStyles();
-
-  const handleBlur = () => {
+function TransitionSlider({ label, probability, onChange }) {
+  const handleBlur = useCallback(() => {
     if (probability < 0) {
-      setProbability(0);
-    } else if (probability > 100) {
-      setProbability(100);
+      onChange(0);
+    } else if (probability > 1) {
+      onChange(1);
     }
-  };
+  }, [probability, onChange]);
 
+  const handleSliderChange = useCallback((event, newValue) => onChange(newValue), [onChange]);
+  const handleTextChange = useCallback(event => onChange(event.target.value), [onChange]);
 
   return (
     <div>
-      <Typography id="input-slider" gutterBottom>
-        Node {label}:
-      </Typography>
+      <p>Node {label}</p>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs>
           <Slider
             value={probability}
             onChange={handleSliderChange}
             aria-labelledby="input-slider"
+            step={0.01}
+            min={0}
+            max={1}
           />
         </Grid>
         <Grid item>
-          <Input
-            className={classes.input}
+          <TextField
             value={probability}
-            margin="dense"
-            onChange={handleInputChange}
+            variant="outlined"
+            onChange={handleTextChange}
             onBlur={handleBlur}
+            type="number"
             inputProps={{
-              step: 10,
+              step: 0.1,
               min: 0,
-              max: 100,
-              type: 'number',
+              max: 1,
               'aria-labelledby': 'input-slider',
             }}
           />

@@ -9,7 +9,11 @@ export function useMarkovChain() {
   const addNode = () => {
     const addedNodeLabel = nodes.length;
     const newNodes = [...nodes]
-      .map(node => ({ ...node, transitionProbabilities: { ...node.transitionProbabilities, addedNodeLabel: 0 } }));
+      .map(node => {
+        const newNode = { ...node, transitionProbabilities: { ...node.transitionProbabilities } }
+        newNode.transitionProbabilities[addedNodeLabel] = 0;
+        return newNode;
+      });
 
     newNodes.push(new Node(addedNodeLabel));
     setNodes(newNodes);
@@ -31,10 +35,13 @@ export function useMarkovChain() {
     const newNodes = [...nodes];
 
     // Normalizing Step
-    const sum = newProbabilities.reduce((accumulator, currentValue) => accumulator + currentValue);
+    let sum = Object.values(newProbabilities).reduce((accumulator, currentValue) => accumulator + currentValue);
 
     if (force) {
-      newProbabilities = newProbabilities.map(probability => probability / sum);
+      for (const label in newProbabilities) {
+        newProbabilities[label] /= sum;
+      }
+      sum = Object.values(newProbabilities).reduce((accumulator, currentValue) => accumulator + currentValue);
     }
 
     const newNode = { ...newNodes[label] };

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Drawer,
   Button,
@@ -23,13 +23,18 @@ function MarkovChain(props) {
   } = props;
 
   const [selectedNode, setSelectedNode] = useState(null);
+  const [open, setOpen] = useState(false);
+  const toggleDrawer = useCallback(() => setOpen(!open), [setOpen, open]);
+  const onNodeClick = useCallback(node => {
+    setSelectedNode(node.id);
+    toggleDrawer();
+  }, [setSelectedNode, toggleDrawer]);
+
   const nodeEditorProps = {
     node: nodes[selectedNode],
-    tryUpdateNodeProbabilities: probabilities => tryUpdateNodeProbabilities(selectedNode, probabilities)
+    tryUpdateNodeProbabilities: (probabilities, force = false) => tryUpdateNodeProbabilities(selectedNode, probabilities, force),
+    toggleDrawer
   }
-
-  const [open, setOpen] = useState(false);
-  const toggleDrawer = () => setOpen(!open);
 
   const data = {
     nodes: nodes.map(node => ({ id: node.label, name: node.label })),
@@ -41,19 +46,15 @@ function MarkovChain(props) {
             target,
             width: 5 * p,
           }))
+          .filter(edge => edge.width > 0)
       ))
     )
   }
 
-  const onNodeClick = useCallback(node => {
-    setSelectedNode(node.label);
-    toggleDrawer();
-  });
-
   return (
     <React.Fragment>
       <ForceGraph2D
-        height="300"
+        height={300}
         graphData={data}
         onNodeClick={onNodeClick}
         nodeLabel="id"

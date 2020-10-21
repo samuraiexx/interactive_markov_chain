@@ -3,7 +3,6 @@ const nodeCanvasObject = (node, ctx, globalScale) => {
   const label = node.id;
   const fontSize = 4;
   ctx.font = `${fontSize}px Sans-Serif`;
-  const textWidth = ctx.measureText(label).width;
 
   ctx.fillStyle = '#3f3f3f';
 
