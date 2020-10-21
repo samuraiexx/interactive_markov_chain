@@ -93,7 +93,7 @@ function NodeEditor({ node, tryUpdateNodeProbabilities, toggleDrawer }) {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             The inserted transition values sum is not 1.
-            Do you wanto to normalize those values and continue?
+            Do you want to normalize those values and continue?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

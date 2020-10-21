@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   Drawer,
   Button,
@@ -18,8 +18,8 @@ function MarkovChain(props) {
     removeNode,
     iterate,
     test,
+    currentNode,
     /*
-      currentNode,
       setCurrentNode,
     */
   } = props;
@@ -31,6 +31,8 @@ function MarkovChain(props) {
     setSelectedNode(node.id);
     toggleDrawer();
   }, [setSelectedNode, toggleDrawer]);
+  const linkWidth = useCallback(link => link.width, []);
+  const linkColor = useCallback(id => "#e3e3e3", []);
 
   const nodeEditorProps = {
     node: nodes[selectedNode],
@@ -38,8 +40,8 @@ function MarkovChain(props) {
     toggleDrawer
   }
 
-  const data = {
-    nodes: nodes.map(node => ({ id: node.label, name: node.label })),
+  const data = useMemo(() => ({
+    nodes: nodes.map(node => ({ id: node.label, name: node.label, isCurrentNode: node.label === currentNode.toString() })),
     links: _.flatten(
       nodes.map(node => (
         Object.entries(node.transitionProbabilities)
@@ -51,7 +53,7 @@ function MarkovChain(props) {
           .filter(edge => edge.width > 0)
       ))
     )
-  }
+  }), [nodes, currentNode]);
 
   return (
     <React.Fragment>
@@ -63,10 +65,10 @@ function MarkovChain(props) {
         linkDirectionalArrowLength={3.5}
         linkDirectionalArrowRelPos={1}
         linkCurvature={0.25}
-        linkWidth={link => link.width}
+        linkWidth={linkWidth}
         nodeCanvasObject={nodeCanvasObject}
         d3VelocityDecay={1}
-        linkColor={id => "#e3e3e3"}
+        linkColor={linkColor}
       />
       <ButtonGroup aria-label="outlined primary button group">
         <Button onClick={addNode}>Add Node</Button>

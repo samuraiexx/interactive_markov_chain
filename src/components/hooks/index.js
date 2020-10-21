@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 const eps = 1e-6;
 
@@ -6,7 +6,7 @@ export function useMarkovChain() {
   const [nodes, setNodes] = useState([]);
   const [currentNode, setCurrentNode] = useState(0);
 
-  const addNode = () => {
+  const addNode = useCallback(() => {
     const addedNodeLabel = nodes.length;
     const newNodes = [...nodes]
       .map(node => {
@@ -17,36 +17,25 @@ export function useMarkovChain() {
 
     newNodes.push(new Node(addedNodeLabel));
     setNodes(newNodes);
-  }
+  }, [nodes]);
 
-  const removeNode = () => {
-    const removedNodeLabel = nodes.length - 1;
-    const newNodes = nodes
-      .slice(0, -1)
-      .map(node => {
-        delete node.transitionProbabilities[removedNodeLabel];
-        return node;
-      });
-
-    setNodes(newNodes);
-  }
-
-  const iterate = () => {
+  const iterate = useCallback(() => {
     const randVal = Math.random();
     let prefSum = 0;
-    let idx = 0;
-    nodes[currentNode].transitionProbabilities.forEach((prob) => {
-      prefSum += prob;
-      if (prefSum > randVal + eps) {
-        setCurrentNode(idx);
-        return idx;
-      }
-      idx++;
-    });
-    return currentNode;
-  }
 
-  const tryUpdateNodeProbabilities = (label, newProbabilities, force = false) => {
+    const probabilities = nodes[currentNode].transitionProbabilities;
+    for (const label in probabilities) {
+      prefSum += probabilities[label];
+      if (prefSum > randVal + eps) {
+        setCurrentNode(label);
+        return label;
+      }
+    }
+
+    throw new Error("Iterate couldn't found the next node");
+  }, [nodes, currentNode]);
+
+  const tryUpdateNodeProbabilities = useCallback((label, newProbabilities, force = false) => {
     const newNodes = [...nodes];
 
     // Normalizing Step
@@ -69,27 +58,41 @@ export function useMarkovChain() {
 
     setNodes(newNodes);
     return true;
-  }
+  }, [nodes]);
 
-  const test = () => {
-    while (nodes.length > 0) {
-      removeNode();
-    }
-
-    let newNodes = [new Node(0), new Node(1), new Node(2), new Node(3), new Node(4)];
-
-    newNodes.map((node) => {
-      let probs = Array(newNodes.length).fill(0);
-      const next = (parseInt(node.label) + 1) % newNodes.length;
-      const prev = (parseInt(node.label) - 1 + newNodes.length) % newNodes.length;
-
-      probs[next] = 0.5;
-      probs[prev] = 0.5;
-      node.transitionProbabilities = probs;
-    });
+  const removeNode = useCallback(() => {
+    const removedNodeLabel = nodes.length - 1;
+    const newNodes = nodes
+      .slice(0, -1)
+      .map(node => {
+        delete node.transitionProbabilities[removedNodeLabel];
+        return node;
+      });
 
     setNodes(newNodes);
-  }
+  }, [nodes]);
+
+  const test = useCallback(() => {
+    const length = 5;
+    console.log({ length });
+    const newNodes = Array
+      .from(Array(length).keys())
+      .map(label => {
+        const node = new Node(label);
+        const probs = Array(length).fill(0);
+        const next = (parseInt(node.label) + 1) % length;
+        const prev = (parseInt(node.label) - 1 + length) % length;
+
+        probs[next] = 0.5;
+        probs[prev] = 0.5;
+        node.transitionProbabilities = probs;
+
+        return node;
+      });
+
+    console.log(newNodes);
+    setNodes(newNodes);
+  }, []);
 
   return {
     nodes,
@@ -97,8 +100,8 @@ export function useMarkovChain() {
     setCurrentNode,
     addNode,
     removeNode,
-    iterate, 
-    test, 
+    iterate,
+    test,
     tryUpdateNodeProbabilities,
   };
 }
