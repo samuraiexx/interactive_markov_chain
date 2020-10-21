@@ -26,13 +26,18 @@ export function useMarkovChain() {
     const probabilities = nodes[currentNode].transitionProbabilities;
     for (const label in probabilities) {
       prefSum += probabilities[label];
-      if (prefSum > randVal + eps) {
+      if (prefSum > randVal - eps) {
+
+        let newNodes = [...nodes]
+        newNodes[label].visited++;
+        setNodes(newNodes);
+
         setCurrentNode(label);
         return label;
       }
     }
 
-    throw new Error("Iterate couldn't found the next node");
+    throw new Error("Iterate couldn't find the next node");
   }, [nodes, currentNode]);
 
   const tryUpdateNodeProbabilities = useCallback((label, newProbabilities, force = false) => {
@@ -62,12 +67,12 @@ export function useMarkovChain() {
 
   const removeNode = useCallback(() => {
     const removedNodeLabel = nodes.length - 1;
-    const newNodes = nodes
-      .slice(0, -1)
-      .map(node => {
-        delete node.transitionProbabilities[removedNodeLabel];
-        return node;
-      });
+    const newNodes = nodes.slice(0, -1);
+    newNodes.forEach(node => {
+      const transitionProbabilities = { ...node.transitionProbabilities };
+      delete transitionProbabilities[removedNodeLabel];
+      tryUpdateNodeProbabilities(transitionProbabilities)
+    });
 
     setNodes(newNodes);
   }, [nodes]);
@@ -109,6 +114,7 @@ export function useMarkovChain() {
 class Node {
   constructor(label) {
     this.label = label.toString();
+    this.visited = 0;
     this.transitionProbabilities = new Array(label + 1).fill(0);
     this.transitionProbabilities[label] = 1;
   }

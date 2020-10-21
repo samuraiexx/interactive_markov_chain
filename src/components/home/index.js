@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -18,6 +17,13 @@ import { useMarkovChain } from '../hooks';
 function Home() {
   const classes = useStyles();
   const markovChainState = useMarkovChain();
+  const totalSteps = React.useMemo(() => {
+    let total = 0;
+    markovChainState.nodes.forEach(node => {
+      total += node.visited;
+    });
+    return total;
+  }, [markovChainState]);
   /*
   const {
     nodes,
@@ -33,50 +39,37 @@ function Home() {
     <div>
       <h1>Interactive Markov Chains</h1>
       <h2>State Statistics</h2>
-  <p>Steps: </p>
-      <Button>asdf</Button>
+  <p>Steps: {totalSteps}</p>
+      {(markovChainState.nodes.length > 0) && 
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Calories</TableCell>
-              <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right">Protein&nbsp;(g)</TableCell>
+              <TableCell align="left">Node</TableCell>
+              <TableCell align="right">Visits</TableCell>
+              <TableCell align="right">Visits (%)</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.name}>
+            {markovChainState.nodes.map((node) => (
+              <TableRow key={node.label}>
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {node.label}
                 </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell>
+                <TableCell align="right">{node.visited}</TableCell>
+                <TableCell align="right">{(totalSteps === 0) ? "0.00 %" 
+                                                            : (node.visited * 100.0 / totalSteps).toFixed(2)  }
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      }
       <MarkovChain {...markovChainState} />
     </div>
   );
 }
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.),
-  createData('Eclair', 262, 16.0, 24, 6.),
-  createData('Cupcake', 305, 3.7, 67, 4.),
-  createData('Gingerbread', 356, 16.0, 49, 3.),
-];
 
 const useStyles = makeStyles({
   table: {
