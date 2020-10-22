@@ -18,7 +18,6 @@ function Home() {
   const classes = useStyles();
   const markovChainState = useMarkovChain();
 
-  console.log(markovChainState.nodes[0].visited);
   window.markovChainState = markovChainState;
 
   return (
@@ -51,13 +50,11 @@ function Home() {
                         {node.label}
                       </TableCell>
                       <TableCell align="right">{node.visited.slice(-1)[0]}</TableCell>
-                      <TableCell align="right">{(markovChainState.totalSteps === 0) ? "0.00 %"
-                        : (node.visited.slice(-1)[0] * 100.0 / markovChainState.totalSteps).toFixed(2)}
+                      <TableCell align="right">{(node.visited.slice(-1)[0] * 100.0 / (markovChainState.totalSteps === 0 ? 1 : markovChainState.totalSteps)).toFixed(2)}
                       </TableCell>
-                      <TableCell align="right">{(markovChainState.totalSteps === 0) ? "0.00 %"
-                        : (markovChainState.expected[parseInt(node.label)] * 100.0).toFixed(2)}
+                      <TableCell align="right">{(markovChainState.expected[parseInt(node.label)] * 100.0).toFixed(2)}
                       </TableCell>
-                      <TableCell align="right">{(markovChainState.totalSteps === 0 && markovChainState.equilibriumExists) ? "0.00 %"
+                      <TableCell align="right">{!markovChainState.equilibriumExists ? "-"
                         : (markovChainState.equilibrium[parseInt(node.label)] * 100.0).toFixed(2)}
                       </TableCell>
                     </TableRow>

@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
     width: 300,
-  }, 
+  },
   paper: {
     position: 'absolute',
     width: 400,
@@ -53,7 +53,7 @@ function getModalStyle() {
 }
 
 
-function MarkovChain(props) {
+function MarkovChain(markovChainState) {
   const {
     nodes,
     tryUpdateNodeProbabilities,
@@ -61,9 +61,9 @@ function MarkovChain(props) {
     removeNode,
     iterate,
     currentNode,
-  } = props;
+    resetIteration,
+  } = markovChainState;
 
-  const markovChainState = useMarkovChain();
   const [selectedNode, setSelectedNode] = useState(null);
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -166,7 +166,7 @@ function MarkovChain(props) {
       <h2 id="simple-modal-title">History of Node {selectedNode}</h2>
       <p id="simple-modal-description">
       </p>
-      <History {...historyProps}/>
+      <History {...historyProps} />
     </div>
   );
 
@@ -207,7 +207,7 @@ function MarkovChain(props) {
           <Button onClick={iterate}>Step</Button>
           <Button onClick={onClickRun}>Run</Button>
           <Button onClick={onClickStop}>Stop</Button>
-          <Button onClick={_.noop}>Reset</Button>
+          <Button onClick={resetIteration}>Reset</Button>
         </ButtonGroup>
       </div>
       <Drawer anchor="left" open={open} onClose={toggleDrawer}>

@@ -12,7 +12,7 @@ export function useMarkovChain() {
     nodes.forEach(node => {
       total += node.visited.slice(-1)[0];
     });
-    return total;
+    return total - 1;
   }, [nodes]);
 
   useEffect(() => {
