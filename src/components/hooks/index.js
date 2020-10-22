@@ -1,9 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 
-import { matrixExp, multiplyMatrix, transpose } from '../utils';
-
-const eps = 1e-6;
-const INF = 1e6;
+import { matrixExp, multiplyMatrix, transpose, EPS, INF, equal, multiplyMatrixVec } from '../utils';
 
 export function useMarkovChain() {
   const [nodes, setNodes] = useState([new Node(0)]);
@@ -22,22 +19,25 @@ export function useMarkovChain() {
     if (totalSteps === 0) {
       setInitialNode(currentNode);
     }
-  }, [totalSteps, initialNode, currentNode])
+  }, [totalSteps, initialNode, currentNode]);
 
-  const [expected, equilibrium] = useMemo(() => {
+  const [expected, equilibrium, equilibriumExists] = useMemo(() => {
     // Calc Matrix
     const transitionMatrix = transpose(nodes
       .reduce((acc, node) => {
         acc.push(node.transitionProbabilities);
         return acc;
-      }, []));
+      }, [])
+    );
 
     const initial = Array(nodes.length).fill(0);
     initial[initialNode] = 1;
 
-    const expected = multiplyMatrix(matrixExp(transitionMatrix, totalSteps), initial);
-    const equilibrium = multiplyMatrix(matrixExp(transitionMatrix, INF), initial);
-    return [expected, equilibrium];
+    const expected = multiplyMatrixVec(matrixExp(transitionMatrix, totalSteps), initial);
+    const equilibrium = multiplyMatrixVec(matrixExp(transitionMatrix, INF), initial);
+    const equilibriumExists = equal(equilibrium, multiplyMatrixVec(transitionMatrix, equilibrium));
+
+    return [expected, equilibrium, equilibriumExists];
   }, [nodes, totalSteps, initialNode]);
 
   const resetIteration = useCallback(() => {
@@ -51,7 +51,7 @@ export function useMarkovChain() {
     const addedNodeLabel = nodes.length;
     const newNodes = [...nodes]
       .map(node => {
-        const newNode = { ...node, transitionProbabilities: { ...node.transitionProbabilities } }
+        const newNode = { ...node, transitionProbabilities: [...node.transitionProbabilities] }
         newNode.transitionProbabilities[addedNodeLabel] = 0;
         newNode.visited = 0;
         return newNode;
@@ -68,7 +68,7 @@ export function useMarkovChain() {
     const probabilities = nodes[currentNode].transitionProbabilities;
     for (const label in probabilities) {
       prefSum += probabilities[label];
-      if (prefSum > randVal - eps) {
+      if (prefSum > randVal - EPS) {
 
         let newNodes = [...nodes]
         newNodes[label].visited++;
@@ -99,7 +99,7 @@ export function useMarkovChain() {
     newNode.transitionProbabilities = newProbabilities;
     newNodes[label] = newNode;
 
-    if (sum + eps < 1 || sum - eps > 1) {
+    if (sum + EPS < 1 || sum - EPS > 1) {
       return false;
     }
 
@@ -114,7 +114,7 @@ export function useMarkovChain() {
     const removedNodeLabel = nodes.length - 1;
     const newNodes = nodes.slice(0, -1);
     newNodes.forEach(node => {
-      const transitionProbabilities = { ...node.transitionProbabilities };
+      const transitionProbabilities = [...node.transitionProbabilities];
       delete transitionProbabilities[removedNodeLabel];
       tryUpdateNodeProbabilities(transitionProbabilities)
     });
@@ -141,6 +141,7 @@ export function useMarkovChain() {
 
     setNodes(newNodes);
   }, []);
+  window.runTest = test;
 
   return {
     totalSteps,
@@ -148,6 +149,7 @@ export function useMarkovChain() {
     currentNode,
     expected,
     equilibrium,
+    equilibriumExists,
     resetIteration,
     setCurrentNode,
     addNode,

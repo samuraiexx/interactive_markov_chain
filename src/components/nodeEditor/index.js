@@ -58,7 +58,7 @@ function NodeEditor({ node, tryUpdateNodeProbabilities, toggleDrawer }) {
   const handleProbabilitiesChange = useMemo(() => (
     Object.entries(transitionProbabilities)
       .map(([label]) => newValue => {
-        const newTransitionProbabilities = { ...transitionProbabilities };
+        const newTransitionProbabilities = [...transitionProbabilities];
         newTransitionProbabilities[label] = parseFloat(newValue);
         setTransitionProbabilities(newTransitionProbabilities);
       })

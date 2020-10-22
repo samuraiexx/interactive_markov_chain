@@ -1,3 +1,12 @@
+import _ from 'lodash';
+
+export const EPS = 1e-6;
+export const INF = 1e6;
+
+export function multiplyMatrixVec(a, x) {
+  const b = x.map(y => [y]);
+  return multiplyMatrix(a, b).map(x => x[0]);
+}
 
 export function multiplyMatrix(a, b) {
   if (a[0].length !== b.length) {
@@ -9,8 +18,8 @@ export function multiplyMatrix(a, b) {
     .map(() => Array(b[0].length).fill(0));
 
   for (let i = 0; i < a.length; i++) {
-    for (let j = 0; j < a.length; j++) {
-      for (let k = 0; k < a.length; k++) {
+    for (let j = 0; j < b[0].length; j++) {
+      for (let k = 0; k < b.length; k++) {
         result[i][j] += a[i][k] * b[k][j];
       }
     }
@@ -29,7 +38,6 @@ export function matrixExp(a, b) {
     .fill([])
     .map(() => Array(length).fill(0));
 
-  console.log(result);
   for (let i = 0; i < length; i++) {
     result[i][i] = 1;
   }
@@ -65,39 +73,16 @@ export function transpose(a) {
   return result;
 }
 
-export function gauss(M, y) {
-  M.forEach((line, i) => line.push(y[i]));
+export function equal(a, b) {
+  if (a.length != b.length) {
+    return false;
+  }
 
-  for (let i = 0; i < M.length; i++) {
-    for (let j = i + 1; j < M.length; j++) {
-      if (M[i][i] < M[j][i]) {
-        [M[i], M[j]] = [M[j], M[i]]; // Swap
-      }
-    }
-
-    if (!M[i][i]) {
-      return null;
-    }
-
-    const x = M[i][i];
-    M[i] = M[i].map(el => el / x);
-
-    for (let k = i + 1; k < M.length; k++) {
-      const x = M[k][i];
-      for (let j = 0; j < M[0].length; j++) {
-        M[k][j] -= x * M[i][j];
-      }
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] + EPS < b[i] && a[i] - EPS > b[i]) {
+      return false;
     }
   }
 
-  for (let i = M.length - 1; i >= 0; i--) {
-    for (let j = 0; j < i; j++) {
-      const x = M[j][i];
-      for (let k = i; k < M[0].length; k++) {
-        M[j][k] -= x * M[i][k];
-      }
-    }
-  }
-
-  return M.map(line => line[line.length - 1]);
+  return true;
 }
