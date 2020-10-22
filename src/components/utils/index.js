@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export const EPS = 1e-6;
 export const INF = 1e6;
 
@@ -74,7 +72,7 @@ export function transpose(a) {
 }
 
 export function equal(a, b) {
-  if (a.length != b.length) {
+  if (a.length !== b.length) {
     return false;
   }
 

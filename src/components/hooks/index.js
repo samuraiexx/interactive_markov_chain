@@ -42,7 +42,7 @@ export function useMarkovChain() {
 
   const resetIteration = useCallback(() => {
     const newNodes = [...nodes].map(node => (
-      { ...node, visited: [(node.label == 0 ? 1 : 0)] }
+      { ...node, visited: [(node.label === "0" ? 1 : 0)] }
     ));
     setNodes(newNodes);
     setCurrentNode(0);
@@ -54,7 +54,7 @@ export function useMarkovChain() {
       .map(node => {
         const newNode = { ...node, transitionProbabilities: [...node.transitionProbabilities] }
         newNode.transitionProbabilities[addedNodeLabel] = 0;
-        newNode.visited = [(newNode.label == 0 ? 1 : 0)];
+        newNode.visited = [(newNode.label === "0" ? 1 : 0)];
         return newNode;
       });
 
@@ -90,13 +90,13 @@ export function useMarkovChain() {
     const newNodes = [...nodes];
 
     // Normalizing Step
-    let sum = Object.values(newProbabilities).reduce((accumulator, currentValue) => accumulator + currentValue);
+    let sum = newProbabilities.reduce((accumulator, currentValue) => accumulator + currentValue);
 
     if (force) {
       for (const label in newProbabilities) {
         newProbabilities[label] /= sum;
       }
-      sum = Object.values(newProbabilities).reduce((accumulator, currentValue) => accumulator + currentValue);
+      sum = 1;
     }
 
     const newNode = { ...newNodes[label] };
@@ -115,23 +115,33 @@ export function useMarkovChain() {
     if (nodes.length === 1) {
       return;
     }
-    const removedNodeLabel = nodes.length - 1;
-    const newNodes = nodes.slice(0, -1);
-    newNodes.forEach(node => {
-      const transitionProbabilities = [...node.transitionProbabilities];
-      delete transitionProbabilities[removedNodeLabel];
-      tryUpdateNodeProbabilities(transitionProbabilities)
-    });
+    setCurrentNode(0);
+
+    const newNodes = nodes.slice(0, -1)
+      .map(node => {
+        const newNode = { ...node };
+        let transitionProbabilities = [...node.transitionProbabilities];
+        transitionProbabilities.pop();
+
+        const sum = transitionProbabilities.reduce((accumulator, currentValue) => accumulator + currentValue);
+        if (sum + EPS < 1 || sum - EPS > 1) {
+          transitionProbabilities = transitionProbabilities.map(p => p /= sum);
+        }
+
+        newNode.transitionProbabilities = transitionProbabilities;
+        newNode.visited = [newNode.label === "0" ? 1 : 0];
+        return newNode;
+      });
 
     setNodes(newNodes);
-  }, [nodes, tryUpdateNodeProbabilities]);
+  }, [nodes]);
 
   const test = useCallback(() => {
     const length = 5;
     const newNodes = Array
       .from(Array(length).keys())
       .map(label => {
-        const node = new Node(label, (label === 0 ? 1 : 0));
+        const node = new Node(label, (label === "0" ? 1 : 0));
         const probs = Array(length).fill(0);
         const next = (parseInt(node.label) + 1) % length;
         const prev = (parseInt(node.label) - 1 + length) % length;

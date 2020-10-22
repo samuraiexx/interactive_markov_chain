@@ -18,6 +18,9 @@ function Home() {
   const classes = useStyles();
   const markovChainState = useMarkovChain();
 
+  console.log(markovChainState.nodes[0].visited);
+  window.markovChainState = markovChainState;
+
   return (
     <div>
       <h1>Interactive Markov Chains</h1>
