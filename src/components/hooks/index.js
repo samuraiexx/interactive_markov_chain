@@ -123,8 +123,12 @@ export function useMarkovChain() {
         let transitionProbabilities = [...node.transitionProbabilities];
         transitionProbabilities.pop();
 
-        const sum = transitionProbabilities.reduce((accumulator, currentValue) => accumulator + currentValue);
+        let sum = transitionProbabilities.reduce((accumulator, currentValue) => accumulator + currentValue);
         if (sum + EPS < 1 || sum - EPS > 1) {
+          if (sum === 0) {
+            transitionProbabilities[newNode.label] = 1;
+            sum = 1;
+          }
           transitionProbabilities = transitionProbabilities.map(p => p /= sum);
         }
 
