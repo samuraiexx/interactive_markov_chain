@@ -11,7 +11,7 @@ import ForceGraph2D from 'react-force-graph-2d';
 import _ from 'lodash';
 
 import NodeEditor from '../nodeEditor';
-import nodeCanvasObject from './nodeCanvasObject';
+import { nodesPosition, renderNodeCanvas } from './nodeCanvasObject';
 
 const useStyles = makeStyles(theme => ({
   graphContainer: {
@@ -60,7 +60,13 @@ function MarkovChain(props) {
   }), [nodes, tryUpdateNodeProbabilities, toggleDrawer, selectedNode]);
 
   const data = useMemo(() => ({
-    nodes: nodes.map(node => ({ id: node.label, name: node.label, isCurrentNode: node.label === currentNode.toString() })),
+    nodes: nodes.map(node => ({
+      id: node.label,
+      name: node.label,
+      isCurrentNode: node.label === currentNode.toString(),
+      x: nodesPosition[node.label] && nodesPosition[node.label][0],
+      y: nodesPosition[node.label] && nodesPosition[node.label][1]
+    })),
     links: _.flatten(
       nodes.map(node => (
         Object.entries(node.transitionProbabilities)
@@ -76,7 +82,6 @@ function MarkovChain(props) {
 
   const runStepRef = useRef(null);
   const runStep = useCallback(() => {
-    console.log(runSpeed);
     if (runSpeed === 0) {
       setRunTimeout(null);
       return;
@@ -124,7 +129,7 @@ function MarkovChain(props) {
           linkDirectionalArrowRelPos={1}
           linkCurvature={0.25}
           linkWidth={linkWidth}
-          nodeCanvasObject={nodeCanvasObject}
+          nodeCanvasObject={renderNodeCanvas}
           d3VelocityDecay={1}
           linkColor={linkColor}
         />

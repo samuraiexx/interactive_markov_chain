@@ -75,11 +75,10 @@ export function useMarkovChain() {
     });
 
     setNodes(newNodes);
-  }, [nodes]);
+  }, [nodes, tryUpdateNodeProbabilities]);
 
   const test = useCallback(() => {
     const length = 5;
-    console.log({ length });
     const newNodes = Array
       .from(Array(length).keys())
       .map(label => {
@@ -95,7 +94,6 @@ export function useMarkovChain() {
         return node;
       });
 
-    console.log(newNodes);
     setNodes(newNodes);
   }, []);
 

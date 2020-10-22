@@ -1,9 +1,13 @@
 
-const nodeCanvasObject = (node, ctx, globalScale) => {
+let nodesPosition = {};
+
+const renderNodeCanvas = (node, ctx, globalScale) => {
   const label = node.id;
   const fontSize = 4;
   const nodeColor = '#3f3f3f';
   const textColor = '#ffffff';
+
+  nodesPosition[node.id] = [node.x, node.y];
 
   ctx.font = `${fontSize}px Roboto`;
 
@@ -26,4 +30,7 @@ const nodeCanvasObject = (node, ctx, globalScale) => {
   ctx.fillText(label, node.x, node.y);
 }
 
-export default nodeCanvasObject;
+module.exports = {
+  nodesPosition,
+  renderNodeCanvas
+}
