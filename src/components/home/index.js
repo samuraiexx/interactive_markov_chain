@@ -40,6 +40,8 @@ function Home() {
                     <TableCell align="left" width="50">Node</TableCell>
                     <TableCell align="right">Visits</TableCell>
                     <TableCell align="right">Visits (%)</TableCell>
+                    <TableCell align="right">Expected (%)</TableCell>
+                    <TableCell align="right">Expected at Equilibrium (%)</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -51,6 +53,12 @@ function Home() {
                       <TableCell align="right">{node.visited.slice(-1)[0]}</TableCell>
                       <TableCell align="right">{(markovChainState.totalSteps === 0) ? "0.00 %"
                         : (node.visited.slice(-1)[0] * 100.0 / markovChainState.totalSteps).toFixed(2)}
+                      </TableCell>
+                      <TableCell align="right">{(markovChainState.totalSteps === 0) ? "0.00 %"
+                        : (markovChainState.expected[parseInt(node.label)] * 100.0).toFixed(2)}
+                      </TableCell>
+                      <TableCell align="right">{(markovChainState.totalSteps === 0 && markovChainState.equilibriumExists) ? "0.00 %"
+                        : (markovChainState.equilibrium[parseInt(node.label)] * 100.0).toFixed(2)}
                       </TableCell>
                     </TableRow>
                   ))}
