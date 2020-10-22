@@ -197,7 +197,7 @@ function MarkovChain(markovChainState) {
           aria-labelledby="speed-slider"
           step={1}
           min={0}
-          max={50}
+          max={200}
         />
       </div>
       <div align="left">
