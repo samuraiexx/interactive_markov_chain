@@ -77,7 +77,7 @@ export function equal(a, b) {
   }
 
   for (let i = 0; i < a.length; i++) {
-    if (a[i] + EPS < b[i] && a[i] - EPS > b[i]) {
+    if (a[i] + EPS < b[i] || a[i] - EPS > b[i]) {
       return false;
     }
   }
