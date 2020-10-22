@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
+  Modal,
   Drawer,
   Button,
   ButtonGroup,
@@ -10,6 +11,8 @@ import {
 import ForceGraph2D from 'react-force-graph-2d';
 import _ from 'lodash';
 
+import History from '../nodeHistory/plotHistory';
+import { useMarkovChain } from '../hooks';
 import NodeEditor from '../nodeEditor';
 import { nodesPosition, renderNodeCanvas } from './nodeCanvasObject';
 
@@ -20,14 +23,35 @@ const useStyles = makeStyles(theme => ({
     padding: "20px"
   },
   graphContainer: {
-    overflow: "hidden",
   },
   sliderContainer: {
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
     width: 300,
+  }, 
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
 }));
+
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+
+  return {
+    width: 600,
+    height: 400,
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
 
 function MarkovChain(props) {
   const {
@@ -39,25 +63,45 @@ function MarkovChain(props) {
     currentNode,
   } = props;
 
+  const markovChainState = useMarkovChain();
   const [selectedNode, setSelectedNode] = useState(null);
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [runTimeout, setRunTimeout] = useState(null);
   const [runSpeed, setRunSpeed] = useState(10);
   const toggleDrawer = useCallback(() => setOpen(!open), [setOpen, open]);
+  const toggleModal = useCallback(() => setOpenModal(!openModal), [setOpenModal, openModal]);
+  const [modalStyle] = React.useState(getModalStyle);
   const onNodeClick = useCallback(node => {
     setSelectedNode(node.id);
     toggleDrawer();
   }, [setSelectedNode, toggleDrawer]);
+  const onNodeRightClick = useCallback(node => {
+    setSelectedNode(node.id);
+    handleOpenModal();
+  }, [setSelectedNode, toggleModal]);
   const linkWidth = useCallback(link => link.width, []);
   const linkColor = useCallback(() => "#e3e3e3", []);
   const handleSliderChange = useCallback((event, newValue) => setRunSpeed(newValue), [setRunSpeed]);
   const classes = useStyles();
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   const nodeEditorProps = useMemo(() => ({
     node: nodes[selectedNode],
     tryUpdateNodeProbabilities: (probabilities, force = false) => tryUpdateNodeProbabilities(selectedNode, probabilities, force),
     toggleDrawer
   }), [nodes, tryUpdateNodeProbabilities, toggleDrawer, selectedNode]);
+
+  const historyProps = useMemo(() => ({
+    node: nodes[selectedNode]
+  }), [nodes, selectedNode]);
 
   const data = useMemo(() => ({
     nodes: nodes.map(node => ({
@@ -117,13 +161,24 @@ function MarkovChain(props) {
       }
     }, [runTimeout, setRunTimeout]);
 
+  const modalBody = (
+    <div style={modalStyle} className={classes.paper}>
+      <h2 id="simple-modal-title">History of Node {selectedNode}</h2>
+      <p id="simple-modal-description">
+      </p>
+      <History {...historyProps}/>
+    </div>
+  );
+
   return (
     <div className={classes.container}>
       <Paper className={classes.graphContainer} >
         <ForceGraph2D
+          width={535}
           height={300}
           graphData={data}
           onNodeClick={onNodeClick}
+          onNodeRightClick={onNodeRightClick}
           nodeLabel="id"
           linkDirectionalArrowLength={3.5}
           linkDirectionalArrowRelPos={1}
@@ -158,6 +213,14 @@ function MarkovChain(props) {
       <Drawer anchor="left" open={open} onClose={toggleDrawer}>
         <NodeEditor {...nodeEditorProps} />
       </Drawer>
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        {modalBody}
+      </Modal>
     </div>
   );
 }
