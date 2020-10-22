@@ -4,9 +4,9 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link as RouterLink,
+  // Link as RouterLink,
 } from "react-router-dom";
-import { Link } from '@material-ui/core';
+// import { Link } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from "@material-ui/core"
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -26,10 +26,12 @@ function App() {
       <CssBaseline>
         <Router>
           <div className="pageContainer">
+            {/*
             <div>
               <Link component={RouterLink} to="/">Home</Link>
               <Link component={RouterLink} to="/about">About</Link>
             </div>
+            */}
             <Switch>
               <Route path="/about">
                 <About />

@@ -12,7 +12,6 @@ import ForceGraph2D from 'react-force-graph-2d';
 import _ from 'lodash';
 
 import History from '../nodeHistory/plotHistory';
-import { useMarkovChain } from '../hooks';
 import NodeEditor from '../nodeEditor';
 import { nodesPosition, renderNodeCanvas } from './nodeCanvasObject';
 
@@ -70,8 +69,10 @@ function MarkovChain(markovChainState) {
   const [runTimeout, setRunTimeout] = useState(null);
   const [runSpeed, setRunSpeed] = useState(10);
   const toggleDrawer = useCallback(() => setOpen(!open), [setOpen, open]);
-  const toggleModal = useCallback(() => setOpenModal(!openModal), [setOpenModal, openModal]);
   const [modalStyle] = React.useState(getModalStyle);
+  const handleOpenModal = useCallback(() => {
+    setOpenModal(true);
+  }, [setOpenModal]);
   const onNodeClick = useCallback(node => {
     setSelectedNode(node.id);
     toggleDrawer();
@@ -79,15 +80,11 @@ function MarkovChain(markovChainState) {
   const onNodeRightClick = useCallback(node => {
     setSelectedNode(node.id);
     handleOpenModal();
-  }, [setSelectedNode, toggleModal]);
+  }, [setSelectedNode, handleOpenModal]);
   const linkWidth = useCallback(link => link.width, []);
   const linkColor = useCallback(() => "#e3e3e3", []);
   const handleSliderChange = useCallback((event, newValue) => setRunSpeed(newValue), [setRunSpeed]);
   const classes = useStyles();
-
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
 
   const handleCloseModal = () => {
     setOpenModal(false);
