@@ -14,6 +14,9 @@ import NodeEditor from '../nodeEditor';
 import { nodesPosition, renderNodeCanvas } from './nodeCanvasObject';
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    width: "50%"
+  },
   graphContainer: {
     marginTop: theme.spacing(2),
     overflow: "hidden",
@@ -118,7 +121,7 @@ function MarkovChain(props) {
     }, [runTimeout, setRunTimeout]);
 
   return (
-    <React.Fragment>
+    <div>
       <Paper className={classes.graphContainer} >
         <ForceGraph2D
           height={300}
@@ -157,7 +160,7 @@ function MarkovChain(props) {
       <Drawer anchor="left" open={open} onClose={toggleDrawer}>
         <NodeEditor {...nodeEditorProps} />
       </Drawer>
-    </React.Fragment>
+    </div>
   );
 }
 

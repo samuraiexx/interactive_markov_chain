@@ -39,39 +39,50 @@ function Home() {
     <div>
       <h1>Interactive Markov Chains</h1>
       <h2>State Statistics</h2>
-  <p>Steps: {totalSteps}</p>
-      {(markovChainState.nodes.length > 0) && 
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Node</TableCell>
-              <TableCell align="right">Visits</TableCell>
-              <TableCell align="right">Visits (%)</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {markovChainState.nodes.map((node) => (
-              <TableRow key={node.label}>
-                <TableCell component="th" scope="row">
-                  {node.label}
-                </TableCell>
-                <TableCell align="right">{node.visited}</TableCell>
-                <TableCell align="right">{(totalSteps === 0) ? "0.00 %" 
-                                                            : (node.visited * 100.0 / totalSteps).toFixed(2)  }
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      }
-      <MarkovChain {...markovChainState} />
+      <p>Steps: {totalSteps}</p>
+      <div className={classes.container}>
+        {markovChainState.nodes.length > 0 &&
+          <div className={classes.talbeContainer}>
+            <TableContainer component={Paper}>
+              <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left">Node</TableCell>
+                    <TableCell align="right">Visits</TableCell>
+                    <TableCell align="right">Visits (%)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {markovChainState.nodes.map((node) => (
+                    <TableRow key={node.label}>
+                      <TableCell component="th" scope="row">
+                        {node.label}
+                      </TableCell>
+                      <TableCell align="right">{node.visited}</TableCell>
+                      <TableCell align="right">{(totalSteps === 0) ? "0.00 %"
+                        : (node.visited * 100.0 / totalSteps).toFixed(2)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        }
+        <MarkovChain {...markovChainState} />
+      </div>
     </div>
   );
 }
 
 const useStyles = makeStyles({
+  container: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  tableContainer: {
+    width: "50%",
+  },
   table: {
     minWidth: 650,
   },
