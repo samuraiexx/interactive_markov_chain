@@ -45,9 +45,9 @@ function Home() {
                       <TableCell component="th" scope="row">
                         {node.label}
                       </TableCell>
-                      <TableCell align="right">{node.visited}</TableCell>
+                      <TableCell align="right">{node.visited.slice(-1)[0]}</TableCell>
                       <TableCell align="right">{(markovChainState.totalSteps === 0) ? "0.00 %"
-                        : (node.visited * 100.0 / markovChainState.totalSteps).toFixed(2)}
+                        : (node.visited.slice(-1)[0] * 100.0 / markovChainState.totalSteps).toFixed(2)}
                       </TableCell>
                     </TableRow>
                   ))}

@@ -1,16 +1,16 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 
-import { matrixExp, multiplyMatrix, transpose, EPS, INF, equal, multiplyMatrixVec } from '../utils';
+import { matrixExp, transpose, EPS, INF, equal, multiplyMatrixVec } from '../utils';
 
 export function useMarkovChain() {
-  const [nodes, setNodes] = useState([new Node(0)]);
+  const [nodes, setNodes] = useState([new Node(0, 1)]);
   const [currentNode, setCurrentNode] = useState(0);
   const [initialNode, setInitialNode] = useState(0);
 
   const totalSteps = useMemo(() => {
     let total = 0;
     nodes.forEach(node => {
-      total += node.visited;
+      total += node.visited.slice(-1)[0];
     });
     return total;
   }, [nodes]);
@@ -42,9 +42,10 @@ export function useMarkovChain() {
 
   const resetIteration = useCallback(() => {
     const newNodes = [...nodes].map(node => (
-      { ...node, visited: 0 }
+      { ...node, visited: [(node.label == 0 ? 1 : 0)] }
     ));
     setNodes(newNodes);
+    setCurrentNode(0);
   }, [nodes]);
 
   const addNode = useCallback(() => {
@@ -53,11 +54,12 @@ export function useMarkovChain() {
       .map(node => {
         const newNode = { ...node, transitionProbabilities: [...node.transitionProbabilities] }
         newNode.transitionProbabilities[addedNodeLabel] = 0;
-        newNode.visited = 0;
+        newNode.visited = [(newNode.label == 0 ? 1 : 0)];
         return newNode;
       });
 
     newNodes.push(new Node(addedNodeLabel));
+    setCurrentNode(0);
     setNodes(newNodes);
   }, [nodes]);
 
@@ -69,13 +71,15 @@ export function useMarkovChain() {
     for (const label in probabilities) {
       prefSum += probabilities[label];
       if (prefSum > randVal - EPS) {
+        const newNodes = [...nodes].map(node => {
+          const newNode = { ...node };
+          newNode.visited.push(newNode.visited.slice(-1)[0] + (newNode.label === label));
+          return newNode;
+        });
 
-        let newNodes = [...nodes]
-        newNodes[label].visited++;
         setNodes(newNodes);
-
         setCurrentNode(label);
-        return label;
+        return;
       }
     }
 
@@ -127,7 +131,7 @@ export function useMarkovChain() {
     const newNodes = Array
       .from(Array(length).keys())
       .map(label => {
-        const node = new Node(label);
+        const node = new Node(label, (label === 0 ? 1 : 0));
         const probs = Array(length).fill(0);
         const next = (parseInt(node.label) + 1) % length;
         const prev = (parseInt(node.label) - 1 + length) % length;
@@ -161,9 +165,9 @@ export function useMarkovChain() {
 }
 
 class Node {
-  constructor(label) {
+  constructor(label, initialVisited = 0) {
     this.label = label.toString();
-    this.visited = 0;
+    this.visited = [initialVisited];
     this.transitionProbabilities = new Array(label + 1).fill(0);
     this.transitionProbabilities[label] = 1;
   }

@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
     width: 300,
-  }, 
+  },
 }));
 
 function MarkovChain(props) {
@@ -36,11 +36,7 @@ function MarkovChain(props) {
     addNode,
     removeNode,
     iterate,
-    test,
     currentNode,
-    /*
-      setCurrentNode,
-    */
   } = props;
 
   const [selectedNode, setSelectedNode] = useState(null);
@@ -150,14 +146,14 @@ function MarkovChain(props) {
         />
       </div>
       <div align="left">
-      <ButtonGroup aria-label="outlined primary button group">
-        <Button onClick={addNode}>Add Node</Button>
-        <Button onClick={removeNode}>Remove Node</Button>
-        <Button onClick={iterate}>Step</Button>
-        <Button onClick={onClickRun}>Run</Button>
-        <Button onClick={onClickStop}>Stop</Button>
-        <Button onClick={_.noop}>Reset</Button>
-      </ButtonGroup>
+        <ButtonGroup aria-label="outlined primary button group">
+          <Button onClick={addNode}>Add Node</Button>
+          <Button onClick={removeNode}>Remove Node</Button>
+          <Button onClick={iterate}>Step</Button>
+          <Button onClick={onClickRun}>Run</Button>
+          <Button onClick={onClickStop}>Stop</Button>
+          <Button onClick={_.noop}>Reset</Button>
+        </ButtonGroup>
       </div>
       <Drawer anchor="left" open={open} onClose={toggleDrawer}>
         <NodeEditor {...nodeEditorProps} />
