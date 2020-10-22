@@ -1,10 +1,51 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+
+import { matrixExp, multiplyMatrix, transpose } from '../utils';
 
 const eps = 1e-6;
+const INF = 1e6;
 
 export function useMarkovChain() {
-  const [nodes, setNodes] = useState([]);
+  const [nodes, setNodes] = useState([new Node(0)]);
   const [currentNode, setCurrentNode] = useState(0);
+  const [initialNode, setInitialNode] = useState(0);
+
+  const totalSteps = useMemo(() => {
+    let total = 0;
+    nodes.forEach(node => {
+      total += node.visited;
+    });
+    return total;
+  }, [nodes]);
+
+  useEffect(() => {
+    if (totalSteps === 0) {
+      setInitialNode(currentNode);
+    }
+  }, [totalSteps, initialNode, currentNode])
+
+  const [expected, equilibrium] = useMemo(() => {
+    // Calc Matrix
+    const transitionMatrix = transpose(nodes
+      .reduce((acc, node) => {
+        acc.push(node.transitionProbabilities);
+        return acc;
+      }, []));
+
+    const initial = Array(nodes.length).fill(0);
+    initial[initialNode] = 1;
+
+    const expected = multiplyMatrix(matrixExp(transitionMatrix, totalSteps), initial);
+    const equilibrium = multiplyMatrix(matrixExp(transitionMatrix, INF), initial);
+    return [expected, equilibrium];
+  }, [nodes, totalSteps, initialNode]);
+
+  const resetIteration = useCallback(() => {
+    const newNodes = [...nodes].map(node => (
+      { ...node, visited: 0 }
+    ));
+    setNodes(newNodes);
+  }, [nodes]);
 
   const addNode = useCallback(() => {
     const addedNodeLabel = nodes.length;
@@ -12,6 +53,7 @@ export function useMarkovChain() {
       .map(node => {
         const newNode = { ...node, transitionProbabilities: { ...node.transitionProbabilities } }
         newNode.transitionProbabilities[addedNodeLabel] = 0;
+        newNode.visited = 0;
         return newNode;
       });
 
@@ -66,6 +108,9 @@ export function useMarkovChain() {
   }, [nodes]);
 
   const removeNode = useCallback(() => {
+    if (nodes.length === 1) {
+      return;
+    }
     const removedNodeLabel = nodes.length - 1;
     const newNodes = nodes.slice(0, -1);
     newNodes.forEach(node => {
@@ -98,8 +143,12 @@ export function useMarkovChain() {
   }, []);
 
   return {
+    totalSteps,
     nodes,
     currentNode,
+    expected,
+    equilibrium,
+    resetIteration,
     setCurrentNode,
     addNode,
     removeNode,

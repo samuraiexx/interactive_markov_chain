@@ -17,13 +17,6 @@ import { useMarkovChain } from '../hooks';
 function Home() {
   const classes = useStyles();
   const markovChainState = useMarkovChain();
-  const totalSteps = React.useMemo(() => {
-    let total = 0;
-    markovChainState.nodes.forEach(node => {
-      total += node.visited;
-    });
-    return total;
-  }, [markovChainState]);
   /*
   const {
     nodes,
@@ -39,7 +32,7 @@ function Home() {
     <div>
       <h1>Interactive Markov Chains</h1>
       <h2>State Statistics</h2>
-      <p>Steps: {totalSteps}</p>
+      <p>Steps: {markovChainState.totalSteps}</p>
       <div className={classes.container}>
         {markovChainState.nodes.length > 0 &&
           <div className={classes.talbeContainer}>
@@ -59,8 +52,8 @@ function Home() {
                         {node.label}
                       </TableCell>
                       <TableCell align="right">{node.visited}</TableCell>
-                      <TableCell align="right">{(totalSteps === 0) ? "0.00 %"
-                        : (node.visited * 100.0 / totalSteps).toFixed(2)}
+                      <TableCell align="right">{(markovChainState.totalSteps === 0) ? "0.00 %"
+                        : (node.visited * 100.0 / markovChainState.totalSteps).toFixed(2)}
                       </TableCell>
                     </TableRow>
                   ))}
