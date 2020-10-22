@@ -70,7 +70,7 @@ export function useMarkovChain() {
     const probabilities = nodes[currentNode].transitionProbabilities;
     for (const label in probabilities) {
       prefSum += probabilities[label];
-      if (prefSum > randVal - EPS) {
+      if (prefSum > randVal + EPS) {
         const newNodes = [...nodes].map(node => {
           const newNode = { ...node };
           newNode.visited.push(newNode.visited.slice(-1)[0] + (newNode.label === label));
