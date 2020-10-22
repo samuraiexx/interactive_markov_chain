@@ -15,17 +15,18 @@ import { nodesPosition, renderNodeCanvas } from './nodeCanvasObject';
 
 const useStyles = makeStyles(theme => ({
   container: {
-    width: "50%"
+    width: "50%",
+    float: "left",
+    padding: "20px"
   },
   graphContainer: {
-    marginTop: theme.spacing(2),
     overflow: "hidden",
   },
   sliderContainer: {
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
     width: 300,
-  }
+  }, 
 }));
 
 function MarkovChain(props) {
@@ -121,7 +122,7 @@ function MarkovChain(props) {
     }, [runTimeout, setRunTimeout]);
 
   return (
-    <div>
+    <div className={classes.container}>
       <Paper className={classes.graphContainer} >
         <ForceGraph2D
           height={300}
@@ -148,6 +149,7 @@ function MarkovChain(props) {
           max={50}
         />
       </div>
+      <div align="left">
       <ButtonGroup aria-label="outlined primary button group">
         <Button onClick={addNode}>Add Node</Button>
         <Button onClick={removeNode}>Remove Node</Button>
@@ -155,8 +157,8 @@ function MarkovChain(props) {
         <Button onClick={onClickRun}>Run</Button>
         <Button onClick={onClickStop}>Stop</Button>
         <Button onClick={_.noop}>Reset</Button>
-        <Button onClick={test}>Generate Test Graph</Button>
       </ButtonGroup>
+      </div>
       <Drawer anchor="left" open={open} onClose={toggleDrawer}>
         <NodeEditor {...nodeEditorProps} />
       </Drawer>
