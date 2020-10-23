@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "53f9870552a26c1ae46dc263148ea46a",
+    "revision": "05d5c0f870f07a46123ae6bcd3f080f3",
     "url": "/interactive_markov_chain/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/interactive_markov_chain/static/css/2.718d9eb3.chunk.css"
   },
   {
-    "revision": "6706d86a4d1425530ccf",
+    "revision": "9a64f015f335267b5951",
     "url": "/interactive_markov_chain/static/css/main.a62ba04b.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/interactive_markov_chain/static/js/2.4e3d11fc.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "6706d86a4d1425530ccf",
-    "url": "/interactive_markov_chain/static/js/main.3aff1d50.chunk.js"
+    "revision": "9a64f015f335267b5951",
+    "url": "/interactive_markov_chain/static/js/main.30da9b5c.chunk.js"
   },
   {
     "revision": "e593f63dc41ab563f1ee",
