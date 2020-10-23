@@ -50,7 +50,7 @@ function Home() {
                         {node.label}
                       </TableCell>
                       <TableCell align="right">{node.visited.slice(-1)[0]}</TableCell>
-                      <TableCell align="right">{(node.visited.slice(-1)[0] * 100.0 / (markovChainState.totalSteps === 0 ? 1 : markovChainState.totalSteps)).toFixed(2)}
+                      <TableCell align="right">{(node.visited.slice(-1)[0] * 100.0 / (markovChainState.totalSteps + 1)).toFixed(2)}
                       </TableCell>
                       <TableCell align="right">{(markovChainState.expected[parseInt(node.label)] * 100.0).toFixed(2)}
                       </TableCell>

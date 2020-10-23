@@ -145,7 +145,7 @@ export function useMarkovChain() {
     const newNodes = Array
       .from(Array(length).keys())
       .map(label => {
-        const node = new Node(label, (label === "0" ? 1 : 0));
+        const node = new Node(label, (label === 0 ? 1 : 0));
         const probs = Array(length).fill(0);
         const next = (parseInt(node.label) + 1) % length;
         const prev = (parseInt(node.label) - 1 + length) % length;
