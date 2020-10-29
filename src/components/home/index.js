@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tableContainer: {
     width: "50%",
-    padding: "20px",
+    padding: "20px 20px 20px 0",
   },
   table: {
     minWidth: 400,
