@@ -1,1 +1,0 @@
-{"version":3,"sources":["App.css"],"names":[],"mappings":"AAAA,eACE,gBAAiB,CACjB,aAAc,CACd,YACF","file":"main.a62ba04b.chunk.css","sourcesContent":[".pageContainer {\r\n  max-width: 1200px;\r\n  margin: 0 auto;\r\n  padding: 24px;\r\n}"]}
