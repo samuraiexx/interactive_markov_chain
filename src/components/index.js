@@ -1,8 +1,7 @@
 import React from 'react';
-import { hot } from 'react-hot-loader';
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route,
   // Link as RouterLink,
 } from "react-router-dom";
@@ -32,14 +31,10 @@ function App() {
               <Link component={RouterLink} to="/about">About</Link>
             </div>
             */}
-            <Switch>
-              <Route path="/about">
-                <About />
-              </Route>
-              <Route path="/">
-                <Home />
-              </Route>
-            </Switch>
+            <Routes>
+              <Route path="/about" element={<About />} />
+              <Route path="/" element={<Home />} />
+            </Routes>
           </div>
         </Router>
       </CssBaseline>
@@ -48,4 +43,4 @@ function App() {
 
 }
 
-export default hot(module)(App);
+export default App;
